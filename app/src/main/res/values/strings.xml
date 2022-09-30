@@ -1,3 +1,5 @@
 <resources>
   <string name="app_name">Ceep</string>
+  <string name="create_note_input_title_hint">Título</string>
+  <string name="create_note_input_description_hint">Descrição</string>
 </resources>
