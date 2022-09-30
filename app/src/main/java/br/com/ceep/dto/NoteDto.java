@@ -18,6 +18,10 @@ public class NoteDto {
 		return (List<Note>) NoteDto.notes.clone();
 	}
 
+	public void addAll(List<Note> notes) {
+		notes.addAll(notes);
+	}
+
 	public void insert(Note... notes) {
 		NoteDto.notes.addAll(Arrays.asList(notes));
 	}
@@ -30,7 +34,7 @@ public class NoteDto {
 		Collections.swap(notes, indexStart, indexEnd);
 	}
 
-	public void removeAll() {
+	public void clear() {
 		NoteDto.notes.clear();
 	}
 }

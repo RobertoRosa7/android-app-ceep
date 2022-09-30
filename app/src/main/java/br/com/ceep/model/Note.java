@@ -1,6 +1,10 @@
 package br.com.ceep.model;
 
-public class Note {
+import androidx.annotation.NonNull;
+
+import java.io.Serializable;
+
+public class Note implements Serializable {
 	private final String title;
 	private final String description;
 
@@ -15,5 +19,14 @@ public class Note {
 
 	public String getDescription() {
 		return description;
+	}
+
+	@NonNull
+	@Override
+	public String toString() {
+		return "Note{" +
+			"title='" + title + '\'' +
+			", description='" + description + '\'' +
+			'}';
 	}
 }

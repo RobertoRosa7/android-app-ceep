@@ -4,11 +4,22 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
+  <ImageView
+    android:id="@+id/create_note_icon_save"
+    android:layout_width="24dp"
+    android:layout_height="24dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginEnd="20dp"
+    android:background="@drawable/ic_action_create_note"
+    android:contentDescription="@string/save_note"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
 
   <EditText
     android:id="@+id/create_note_input_title"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
+    android:inputType="text"
     android:layout_margin="20dp"
     android:background="@android:color/transparent"
     android:hint="@string/create_note_input_title_hint"
@@ -16,7 +27,7 @@
     android:textStyle="bold"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+    app:layout_constraintTop_toBottomOf="@+id/create_note_icon_save" />
 
   <EditText
     android:id="@+id/create_note_input_description"

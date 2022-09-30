@@ -4,10 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.Objects;
 
 import br.com.ceep.R;
 import br.com.ceep.dto.NoteDto;
@@ -15,38 +16,47 @@ import br.com.ceep.model.Note;
 import br.com.ceep.ui.recyclerview.ListNoteAdapter;
 
 public class ListNoteActivity extends MainActivity {
+	public static final int CODE_RESULT = 2;
+	public static final String KEY_NOTE = "note";
+	private final NoteDto noteDto = new NoteDto();
+	private ListNoteAdapter adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_list_note);
-		this.setRecyclerView(this.getNoteDto());
-
+		this.setRecyclerView(this.noteDto.all());
 		this.gotoCreateNote();
+	}
+
+	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+		if (this.validActivityResult(resultCode, data)) {
+			this.addNote(this.noteSerialized(data));
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	private Note noteSerialized(@Nullable Intent data) {
+		return (Note) Objects.requireNonNull(data).getSerializableExtra(KEY_NOTE);
+	}
+
+	private void addNote(Note note) {
+		new NoteDto().insert(note);
+		this.adapter.add(note);
+	}
+
+	private boolean validActivityResult(int resultCode, @Nullable Intent data) {
+		return resultCode == CODE_RESULT && Objects.requireNonNull(data).hasExtra(KEY_NOTE);
 	}
 
 	private void gotoCreateNote() {
 		TextView inputTitle = findViewById(R.id.lista_notas_insere_nota);
-		inputTitle.setOnClickListener(view -> this.startActivity(new Intent(this, CreateNoteActivity.class)));
-	}
-
-	@NonNull
-	private List<Note> getNoteDto() {
-		NoteDto noteDto = new NoteDto();
-		noteDto.insert(
-			new Note("Título ", "primeira descrição "),
-			new Note("Título ", "primeira descrição é bem maior que a primeira nota ")
-		);
-
-		return noteDto.all();
+		inputTitle.setOnClickListener(view -> this.startActivityForResult(new Intent(this, CreateNoteActivity.class), 1));
 	}
 
 	private void setRecyclerView(List<Note> notes) {
 		RecyclerView listNotes = findViewById(R.id.list_note_recyclerView);
-		listNotes.setAdapter(new ListNoteAdapter(this, notes));
+		adapter = new ListNoteAdapter(this, notes);
+		listNotes.setAdapter(adapter);
 	}
-
-//	private void setLayoutManager(RecyclerView listNotes) {
-//		listNotes.setLayoutManager(new LinearLayoutManager(ListNoteActivity.this));
-//	}
 }

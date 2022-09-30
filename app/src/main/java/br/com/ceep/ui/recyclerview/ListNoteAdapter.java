@@ -44,6 +44,10 @@ public class ListNoteAdapter extends RecyclerView.Adapter<ListNoteAdapter.NoteVi
 		return this.notes.size();
 	}
 
+	public void add(Note note) {
+		this.notes.add(note);
+	}
+
 	static class NoteViewHolder extends RecyclerView.ViewHolder {
 		private final TextView title;
 		private final TextView description;
