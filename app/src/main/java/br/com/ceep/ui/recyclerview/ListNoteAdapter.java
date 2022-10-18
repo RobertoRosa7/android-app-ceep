@@ -1,5 +1,6 @@
 package br.com.ceep.ui.recyclerview;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,14 +14,20 @@ import java.util.List;
 
 import br.com.ceep.R;
 import br.com.ceep.model.Note;
+import br.com.ceep.ui.listener.OnItemClickListener;
 
 public class ListNoteAdapter extends RecyclerView.Adapter<ListNoteAdapter.NoteViewHolder> {
 	private final List<Note> notes;
 	private final Context context;
+	private OnItemClickListener onItemClickListener;
 
 	public ListNoteAdapter(Context context, List<Note> notes) {
 		this.notes = notes;
 		this.context = context;
+	}
+
+	public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+		this.onItemClickListener = onItemClickListener;
 	}
 
 	@NonNull
@@ -32,11 +39,7 @@ public class ListNoteAdapter extends RecyclerView.Adapter<ListNoteAdapter.NoteVi
 
 	@Override
 	public void onBindViewHolder(@NonNull ListNoteAdapter.NoteViewHolder holder, int position) {
-		this.executeBindView(holder, this.notes.get(position));
-	}
-
-	private void executeBindView(ListNoteAdapter.NoteViewHolder holder, Note note) {
-		holder.execute(note);
+		holder.execute(this.notes.get(position));
 	}
 
 	@Override
@@ -48,17 +51,26 @@ public class ListNoteAdapter extends RecyclerView.Adapter<ListNoteAdapter.NoteVi
 		this.notes.add(note);
 	}
 
-	static class NoteViewHolder extends RecyclerView.ViewHolder {
+	@SuppressLint("NotifyDataSetChanged")
+	public void update(int position, Note note) {
+		this.notes.set(position, note);
+		this.notifyDataSetChanged();
+	}
+
+	class NoteViewHolder extends RecyclerView.ViewHolder {
 		private final TextView title;
 		private final TextView description;
+		private Note note;
 
 		public NoteViewHolder(@NonNull View itemView) {
 			super(itemView);
 			this.title = itemView.findViewById(R.id.item_nota_titulo);
 			this.description = itemView.findViewById(R.id.item_nota_descricao);
+			itemView.setOnClickListener(view -> onItemClickListener.onItemClick(this.note, this.getAdapterPosition()));
 		}
 
 		public void execute(Note note) {
+			this.note = note;
 			this.setTitle(note);
 			this.setDescription(note);
 		}
